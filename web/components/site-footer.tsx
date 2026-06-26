@@ -13,10 +13,7 @@ const COLS = [
   },
   {
     title: "Transparência",
-    links: [
-      { href: "/metodologia", label: "Metodologia" },
-      { href: "/sobre", label: "Sobre" },
-    ],
+    links: [{ href: "/sobre", label: "Sobre" }],
   },
   {
     title: "Conta",

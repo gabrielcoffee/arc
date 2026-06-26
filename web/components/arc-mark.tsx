@@ -26,7 +26,7 @@ export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn("flex items-center gap-2", className)}>
       <ArcMark className="h-[22px] w-[22px]" />
-      <span className="font-serif text-[1.35rem] leading-none tracking-tight text-ink">
+      <span className="font-display text-[1.35rem] leading-none tracking-tight text-ink">
         ARC
       </span>
     </span>

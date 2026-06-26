@@ -4,7 +4,6 @@
 export type ReportId =
   | "carta"
   | "aprofundamento"
-  | "watchlist"
   | "carteira"
   | "rankings"
   | "esp_fii"
@@ -40,14 +39,6 @@ export const REPORTS: Report[] = [
     blurb: "O Professor explica um tema do mercado do zero.",
   },
   {
-    id: "watchlist",
-    name: "Watchlist Semanal",
-    price: 12,
-    cadence: "Semanal",
-    category: "base",
-    blurb: "3–5 ativos para monitorar, com gatilho e prazo.",
-  },
-  {
     id: "carteira",
     name: "Carteira ARC",
     price: 44,
@@ -57,11 +48,11 @@ export const REPORTS: Report[] = [
   },
   {
     id: "rankings",
-    name: "Rankings Top-10",
+    name: "Rankings Top-20",
     price: 19,
     cadence: "Mensal",
     category: "base",
-    blurb: "Shortlists ranqueadas por categoria, com rationale.",
+    blurb: "Shortlists Top-20 ranqueadas por categoria, com rationale.",
   },
   {
     id: "esp_fii",
@@ -109,7 +100,7 @@ export const PLANS: Plan[] = [
     tagline: "Entenda o mercado toda semana.",
     audience:
       "Para quem quer entender o cenário antes de alocar com base na recomendação.",
-    includes: ["carta", "aprofundamento", "watchlist"],
+    includes: ["carta", "aprofundamento"],
   },
   {
     id: "gestora",
@@ -118,7 +109,7 @@ export const PLANS: Plan[] = [
     tagline: "Carta + a Carteira ARC, todo mês.",
     audience:
       "Para quem quer alocar com base na recomendação e acompanhar de forma estruturada.",
-    includes: ["carta", "aprofundamento", "watchlist", "carteira", "rankings"],
+    includes: ["carta", "aprofundamento", "carteira", "rankings"],
     featured: true,
   },
 ];

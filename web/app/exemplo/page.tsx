@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Markdown } from "@/components/markdown";
-import { SectionLabel } from "@/components/section-label";
 import { ButtonLink } from "@/components/ui/button";
 import { Disclaimer } from "@/components/disclaimer";
 import { ArrowRight } from "lucide-react";
@@ -33,7 +32,9 @@ export default function ExemploPage() {
   return (
     <div className="mx-auto max-w-[760px] px-6 py-16 sm:py-24">
       <header>
-        <SectionLabel number="—">Carta de exemplo · pública</SectionLabel>
+        <p className="font-mono text-2xs uppercase tracking-[0.18em] text-ink-3">
+          Carta de exemplo · pública
+        </p>
         <p className="mt-6 text-sm leading-relaxed text-ink-2">
           Esta é uma carta semanal real, publicada na íntegra. Sem cadastro. O
           melhor argumento é o próprio produto.
@@ -48,7 +49,7 @@ export default function ExemploPage() {
 
       {/* lead-magnet CTA */}
       <div className="mt-14 rounded-[var(--radius-card)] border border-accent/30 bg-accent-wash p-8 text-center">
-        <h2 className="font-serif text-[clamp(1.75rem,3vw,2.25rem)] leading-tight text-ink">
+        <h2 className="font-display text-[clamp(1.75rem,3vw,2.25rem)] leading-tight text-ink">
           Receba a próxima toda semana.
         </h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-2">

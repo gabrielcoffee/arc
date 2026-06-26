@@ -9,7 +9,6 @@ import { ButtonLink } from "@/components/ui/button";
 
 const LINKS = [
   { href: "/como-funciona", label: "Como funciona" },
-  { href: "/metodologia", label: "Metodologia" },
   { href: "/exemplo", label: "Carta de exemplo" },
   { href: "/planos", label: "Planos" },
 ];

@@ -36,7 +36,7 @@ export function Deliverables() {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-[0_2px_24px_rgba(17,17,16,0.05)]">
+      <div className="overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
         <div className="flex items-center justify-between border-b border-border bg-subtle/50 px-5 py-3">
           <span className="font-mono text-2xs uppercase tracking-[0.14em] text-ink-2">
             preview · {TABS.find((t) => t.id === tab)?.label}
@@ -62,7 +62,7 @@ function CartaPreview() {
       <p className="font-mono text-2xs uppercase tracking-[0.14em] text-accent">
         16 de junho de 2026
       </p>
-      <h3 className="mt-2 font-serif text-[1.75rem] leading-tight text-ink">
+      <h3 className="mt-2 font-display text-[1.75rem] leading-tight text-ink">
         Desinflação Fraturada, Ciclo de Afrouxamento Sob Risco
       </h3>
       <div className="mt-4 flex flex-wrap gap-2">
@@ -140,12 +140,12 @@ function RankingsPreview() {
   return (
     <div>
       <p className="mb-4 font-mono text-2xs uppercase tracking-[0.14em] text-ink-2">
-        Top 10 · Ações Brasil
+        Top 20 · Ações Brasil
       </p>
       <ul className="space-y-3">
         {RANKS.map((r) => (
           <li key={r.ticker} className="flex gap-4">
-            <span className="font-serif text-2xl leading-none text-accent">
+            <span className="font-display text-2xl leading-none text-accent">
               {r.n}
             </span>
             <div>
@@ -156,7 +156,7 @@ function RankingsPreview() {
             </div>
           </li>
         ))}
-        <li className="pl-10 text-xs text-ink-3">+ 7 nomes ranqueados…</li>
+        <li className="pl-10 text-xs text-ink-3">+ 17 nomes ranqueados…</li>
       </ul>
     </div>
   );
@@ -168,7 +168,7 @@ function AprofPreview() {
       <p className="font-mono text-2xs uppercase tracking-[0.14em] text-accent">
         Aprofundamento da semana
       </p>
-      <h3 className="mt-2 font-serif text-[1.6rem] leading-tight text-ink">
+      <h3 className="mt-2 font-display text-[1.6rem] leading-tight text-ink">
         O juro nominal é o trailer. O juro real é o filme inteiro.
       </h3>
       <p className="mt-4 text-base leading-relaxed text-ink-2">

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SectionLabel } from "@/components/section-label";
 import { ButtonLink } from "@/components/ui/button";
 import { PLANS } from "@/lib/plans";
 
@@ -17,8 +16,10 @@ export default async function AppPage({
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-[640px] flex-col justify-center px-6 py-24">
-      <SectionLabel number="—">Dashboard · em breve</SectionLabel>
-      <h1 className="mt-6 font-serif text-[clamp(2.25rem,5vw,3.25rem)] leading-tight tracking-[-0.015em] text-ink">
+      <p className="font-mono text-2xs uppercase tracking-[0.18em] text-ink-3">
+        Dashboard · em breve
+      </p>
+      <h1 className="mt-6 font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-tight tracking-[-0.015em] text-ink">
         {plan ? `${plan.name} selecionado.` : "Sua conta ARC."}
       </h1>
       <p className="mt-5 leading-relaxed text-ink-2">

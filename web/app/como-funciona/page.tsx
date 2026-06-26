@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SectionLabel } from "@/components/section-label";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { Disclaimer } from "@/components/disclaimer";
@@ -40,11 +39,10 @@ const COMMITTEE = [
 ];
 
 const POST = [
-  { role: "Gestor", desc: "Monta a Carteira ARC e os rankings Top-10. Rebalance mensal, bandas rígidas." },
+  { role: "Gestor", desc: "Monta a Carteira ARC e os rankings Top-20. Rebalance mensal, bandas rígidas." },
   { role: "Professor", desc: "Escolhe um tema recente e ensina do zero — o aprofundamento." },
   { role: "Crítico", desc: "Avalia o processo de cada agente e propõe lições (gate manual)." },
   { role: "Arquivista", desc: "Organiza o anexo técnico auditável do dossiê." },
-  { role: "Watchlist", desc: "Destila 3–5 ativos para monitorar, com gatilho real." },
   { role: "Especialistas", desc: "FII, Cripto e Global — deep-dives opcionais com sub-carteira." },
 ];
 
@@ -59,8 +57,7 @@ export default function ComoFuncionaPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-16 sm:py-24">
       <header className="max-w-2xl">
-        <SectionLabel number="01">Como funciona</SectionLabel>
-        <h1 className="mt-6 font-serif text-[clamp(2.5rem,6vw,4rem)] leading-[1.04] tracking-[-0.015em] text-ink">
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-[1.04] tracking-[-0.015em] text-ink">
           Um comitê que pesquisa, debate e aprende.
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-ink-2">
@@ -72,13 +69,15 @@ export default function ComoFuncionaPage() {
 
       {/* Committee */}
       <section className="mt-20">
-        <SectionLabel number="02">O comitê (sequencial)</SectionLabel>
+        <h2 className="font-display text-2xl leading-snug text-ink">
+          O comitê (sequencial)
+        </h2>
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {COMMITTEE.map((a, i) => (
             <Reveal key={a.role} delay={i * 70}>
               <Card interactive className="h-full">
                 <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-serif text-xl text-ink">{a.role}</h3>
+                  <h3 className="font-display text-xl text-ink">{a.role}</h3>
                   <span className="font-mono text-2xs uppercase tracking-[0.1em] text-accent">
                     {a.model}
                   </span>
@@ -97,7 +96,9 @@ export default function ComoFuncionaPage() {
 
       {/* Post-committee */}
       <section className="mt-20">
-        <SectionLabel number="03">O pós-comitê (paralelo)</SectionLabel>
+        <h2 className="font-display text-2xl leading-snug text-ink">
+          O pós-comitê (paralelo)
+        </h2>
         <p className="mt-6 max-w-xl leading-relaxed text-ink-2">
           Best-effort e concorrente — uma falha em qualquer etapa não cancela o
           run. A calibração roda depois, lendo os scores do crítico.
@@ -118,8 +119,7 @@ export default function ComoFuncionaPage() {
 
       {/* Data grounding */}
       <section className="mt-20 rounded-[var(--radius-card)] border border-border bg-surface/50 p-8 sm:p-10">
-        <SectionLabel number="04">Como os dados chegam</SectionLabel>
-        <h2 className="mt-6 max-w-xl font-serif text-2xl leading-snug text-ink">
+        <h2 className="max-w-xl font-display text-2xl leading-snug text-ink">
           Grounding determinístico — a defesa contra alucinação.
         </h2>
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
@@ -136,7 +136,9 @@ export default function ComoFuncionaPage() {
 
       {/* Self-improvement */}
       <section className="mt-20">
-        <SectionLabel number="05">O loop de auto-melhoria</SectionLabel>
+        <h2 className="font-display text-2xl leading-snug text-ink">
+          O loop de auto-melhoria
+        </h2>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {[
             { t: "Injeção de lições", d: "Cada agente começa o run lendo as lições aprovadas dos runs anteriores." },
@@ -145,10 +147,7 @@ export default function ComoFuncionaPage() {
           ].map((s, i) => (
             <Reveal key={s.t} delay={i * 80}>
               <div className="rounded-[var(--radius-card)] border border-border bg-surface p-6">
-                <span className="font-mono text-2xs uppercase tracking-[0.12em] text-accent">
-                  0{i + 1}
-                </span>
-                <h3 className="mt-3 font-serif text-xl text-ink">{s.t}</h3>
+                <h3 className="font-display text-xl text-ink">{s.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-2">{s.d}</p>
               </div>
             </Reveal>
@@ -161,8 +160,8 @@ export default function ComoFuncionaPage() {
       </div>
 
       <div className="mt-12 flex flex-wrap items-center gap-4">
-        <ButtonLink href="/metodologia" variant="secondary">
-          Ler a metodologia
+        <ButtonLink href="/exemplo" variant="secondary">
+          Ler uma carta de exemplo
         </ButtonLink>
         <ButtonLink href="/planos">
           Ver planos

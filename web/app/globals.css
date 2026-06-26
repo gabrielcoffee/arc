@@ -2,32 +2,33 @@
 
 /* ============================================================
    ARC — design tokens (from design_brief.md)
-   Light mode is primary. Warm whites, single amber accent.
+   Dark mode only. Zinc/charcoal surfaces, single ochre accent.
    ============================================================ */
 
 @theme {
-  /* Surfaces — warm, never pure white/cold gray */
-  --color-bg: #fafaf8;
-  --color-surface: #ffffff;
-  --color-subtle: #f3f3f0;
-  --color-border: #e4e4df;
+  /* Surfaces — zinc/charcoal, never pure black */
+  --color-bg: #111113;
+  --color-surface: #1c1c1f;
+  --color-subtle: #242428;
+  --color-border: #2e2e33;
 
-  /* Ink */
-  --color-ink: #111110;
-  --color-ink-2: #6b6b6a;
-  --color-ink-3: #ababaa;
+  /* Ink (inverted for dark) */
+  --color-ink: #f4f4f5;
+  --color-ink-2: #a1a1aa;
+  --color-ink-3: #71717a;
 
-  /* Single accent — darker amber reads on warm white (WCAG AA) */
-  --color-accent: #a07a3e;
-  --color-accent-hover: #8c6a32;
-  --color-accent-wash: #a07a3e14;
+  /* Single accent — ochre (yellow-500). Dark ink rides on top of it. */
+  --color-accent: #eab308;
+  --color-accent-hover: #facc15;
+  --color-accent-wash: #eab30818;
+  --color-on-accent: #111113;
 
-  /* Semantics */
-  --color-pos: #2e7d52;
-  --color-neg: #c0392b;
+  /* Semantics — brightened to read on charcoal */
+  --color-pos: #34d399;
+  --color-neg: #f87171;
 
   /* Typography */
-  --font-serif: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
@@ -57,6 +58,8 @@
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-fade-up: fade-up 0.5s var(--ease-out-soft) both;
+  --animate-dash: dash-flow 1.4s linear infinite;
+  --animate-float: float-bob 4.5s var(--ease-out-soft) infinite;
 }
 
 @keyframes fade-up {
@@ -67,6 +70,22 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes float-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -94,17 +113,18 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
-/* Subtle paper grain — atmosphere without asset files */
+/* Subtle grain — atmosphere without asset files */
 .grain::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.022;
+  opacity: 0.05;
+  mix-blend-mode: screen;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -143,17 +163,17 @@ body {
   margin-top: 0;
 }
 .prose-editorial h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-2xl);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin: 2.75rem 0 1rem;
 }
 .prose-editorial h2 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-xl);
   margin: 2.5rem 0 0.75rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 .prose-editorial h3 {
   font-weight: 600;

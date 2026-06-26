@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SectionLabel } from "@/components/section-label";
 import { Disclaimer } from "@/components/disclaimer";
 import { ButtonLink } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -13,8 +12,7 @@ export const metadata: Metadata = {
 export default function SobrePage() {
   return (
     <div className="mx-auto max-w-[720px] px-6 py-16 sm:py-24">
-      <SectionLabel number="01">Sobre</SectionLabel>
-      <h1 className="mt-6 font-serif text-[clamp(2.5rem,6vw,3.75rem)] leading-[1.05] tracking-[-0.015em] text-ink">
+      <h1 className="font-display text-[clamp(2.5rem,6vw,3.75rem)] leading-[1.05] tracking-[-0.015em] text-ink">
         Research que respeita sua inteligência.
       </h1>
 
