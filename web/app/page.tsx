@@ -11,11 +11,6 @@ export default function Home() {
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <ParticlesBg className="absolute inset-0 z-0" />
-        {/* soft focus glow behind the committee */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute right-0 top-0 z-0 hidden h-[600px] w-[600px] translate-x-1/4 -translate-y-1/4 rounded-full bg-[radial-gradient(circle,var(--color-accent-wash),transparent_70%)] lg:block"
-        />
 
         <div className="relative z-10 mx-auto max-w-[1200px] px-6 pt-16 pb-24 sm:pt-24">
           <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
@@ -23,17 +18,19 @@ export default function Home() {
               <h1 className="font-display text-[clamp(2.75rem,6vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.02em] text-ink">
                 Seu comitê de
                 <br />
-                analistas.
-                <br />
-                <span className="text-accent">Funciona toda semana.</span>
+                analistas de investimento.
               </h1>
+              <p className="mt-5 text-accent font-medium text-[clamp(1.05rem,2vw,1.4rem)] leading-snug">
+                Uma gestora formada por agentes de IA que pesquisa, debate e
+                entrega relatórios de mercado.
+              </p>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <ButtonLink href="/planos">
                   Ver planos
                   <ArrowRight className="h-4 w-4" />
                 </ButtonLink>
                 <ButtonLink href="/exemplo" variant="ghost">
-                  Ler uma carta de exemplo →
+                  Ler relatórios de exemplo →
                 </ButtonLink>
               </div>
             </div>
@@ -54,7 +51,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1200px] px-6 py-24">
           <Reveal>
             <h2 className="max-w-2xl font-display text-[clamp(2rem,4vw,2.75rem)] font-medium leading-tight tracking-[-0.015em] text-ink">
-              Entregáveis reais — não promessas.
+              Entregáveis reais, não promessas.
             </h2>
           </Reveal>
           <Reveal delay={120} className="mt-12">
@@ -80,7 +77,7 @@ export default function Home() {
               <ArrowRight className="h-4 w-4" />
             </ButtonLink>
             <ButtonLink href="/exemplo" variant="secondary">
-              Ler uma carta de exemplo
+              Ler relatórios de exemplo
             </ButtonLink>
           </div>
         </Reveal>
