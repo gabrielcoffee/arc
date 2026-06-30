@@ -1,8 +1,10 @@
 # Produto ARC — Reports & Precificação
 
-**Data:** 19/06/2026
-**Status:** definido / pronto para implementação
-**Contexto:** resultado de sessão de brainstorming sobre quais reports gerar, como precificar e como estruturar os planos de venda.
+**Data:** 19/06/2026 · **Atualizado:** 2026-06-29 (Factor Investing)
+**Status:** o catálogo abaixo reflete a arquitetura atual (7 carteiras de fator).
+A estrutura técnica é a [`arquitetura_carteiras.md`](arquitetura_carteiras.md).
+**Preços/planos abaixo (seções 2+) são da fase anterior — revisar à luz das 7
+carteiras.**
 
 ---
 
@@ -14,19 +16,20 @@
 |---|---|---|---|
 | **Carta Semanal** | Semanal | Investidor PF médio | Análise macro + cenário + oportunidades em linguagem acessível, 2–4 páginas |
 | **Aprofundamento Educativo** | Semanal | Iniciante | Agente Professor explica um tema do mercado do zero — analogia, mitos, glossário, FAQ |
-| **Watchlist Semanal** | Semanal | Qualquer assinante | 3–5 ativos para monitorar na semana com preço de gatilho e motivo. Tático, complementa a Carteira sem contradizê-la |
-| **Carteira ARC** | Mensal | Quem vai alocar | Portfólio recomendado ~25 ativos, estratégia barbell, 3 opiniões por ativo (economista, fundamentalista, técnico) |
-| **Rankings Top-10** | Mensal | Qualquer assinante | Shortlists ranqueadas em 7 categorias: ações BR, ações EUA, FIIs, ETF B3, ETF EUA amplo, ETF internacional ex-EUA, ETF emergentes |
+| **Watchlist Semanal** | Semanal | Qualquer assinante | 3–5 ativos para monitorar na semana com preço de gatilho e motivo |
+| **Carteiras do Gestor (BR)** | Mensal | Quem vai alocar | 🏆 Retorno Total + 💰 Dividendos Defensiva (ações BR, Factor Investing AFM-BR) + 🌐 ETFs da B3 (diversificação geográfica). Cada uma alocada + ranking Top-10 + performance |
 
-### Especialistas (Add-ons)
+### Especialistas (Add-ons) — cada um dono de carteira(s) de fator
 
 | Especialista | Cadência | O que inclui |
 |---|---|---|
-| **Especialista FII** | Mensal | Análise profunda de FIIs (P/VP, vacância, DY, gestora) + **Carteira de Dividendos** (sub-carteira com foco em yield sustentável) |
-| **Especialista Cripto** | Mensal | Análise BTC, ETH e macro cripto, conservative sem hype + **Carteira Cripto** (posição marginal, educativa) |
-| **Especialista Global** | Mensal | Cobertura de mercados globais além dos EUA: Europa (DAX, BCE), China (CSI 300, yuan, regulatório), emergentes + ranking de BDRs e ETFs globais disponíveis na B3 + impacto cambial para o investidor brasileiro |
+| **Especialista FII** | Mensal | Mini-carta de imóveis + **Carteira de FIIs** (segmento + P/VP + FFO + vacância) + ranking Top-10 |
+| **Especialista Cripto** | Mensal | Mini-carta cripto conservadora + **Carteira de Cripto** (market-cap + dominância BTC, sem meme) + ranking Top-10 |
+| **Especialista Global** | Mensal | Mini-carta global + **Carteira de Ações US** (AFM-US: Qualidade+Momentum) + **Carteira de ETFs Internacionais** + rankings Top-10 |
 
-> **Nota:** Carteira de Dividendos vive dentro do Especialista FII. Carteira Cripto vive dentro do Especialista Cripto. Não são produtos standalone.
+> **Nota:** cada carteira é montada por um motor de fatores determinístico + curadoria
+> do agente, com ranking e tracking de performance. Não há mais carteira barbell
+> unificada nem "Rankings Top-10 em 7 categorias" centralizados (cada agente faz o seu).
 
 ### Report Interno (não comercializado)
 

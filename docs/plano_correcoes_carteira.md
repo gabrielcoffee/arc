@@ -1,5 +1,9 @@
 # Plano de correções — Carteira / Gestor (v2)
 
+> **⚠️ Histórico (superado em 2026-06-29):** este plano corrigia a Carteira ARC
+> barbell, que foi **aposentada**. O Gestor agora produz 3 carteiras de fator —
+> ver [`arquitetura_carteiras.md`](arquitetura_carteiras.md). Mantido como registro.
+
 **Data:** 16/06/2026
 **Origem:** feedback acumulado + frustração legítima de 3 runs sem mudança visível.
 

@@ -1,5 +1,13 @@
 # Methodology — Evidence-Based Foundations for the ARC Agents
 
+> **Atualizado 2026-06-29:** o produto são 7 carteiras de Factor Investing (ver
+> [`arquitetura_carteiras.md`](arquitetura_carteiras.md)). Os fatores **diferem por
+> mercado**: no Brasil o **Valor lidera** (AFM-BR, `fama_french_fatores_br.md`); nos
+> EUA **Qualidade/Profitability + Momentum lideram** e Valor é secundário (AFM-US,
+> Fama-French 5-fatores 2015); ETFs/cripto usam diversificação + momentum (sem
+> Valor). As fundações de evidência abaixo seguem válidas; o modelo barbell de
+> sleeves foi aposentado.
+
 **What this document is:** the intellectual backbone of the system. Every
 design decision in the agent prompts traces back to a claim made here, with a
 citation. Read it when you want to understand *why* an agent does what it does,
@@ -94,9 +102,57 @@ Never produce a number without a source.
 
 ---
 
-## 2. Fundamental Analyst — quality + value, the documented premia
+## 2. Fundamental Analyst — the AFM-BR multifactor model
 
-### Core framework: ALWAYS combine value AND quality (never a single factor)
+**Pivot (2026):** the analyst's core is now **Factor Investing on Brazilian
+stocks**, driven by the deterministic **AFM-BR (Modelo Multifator ARC)** — see
+[`fama_french_fatores_br.md`](fama_french_fatores_br.md) for the full formula. Five
+sector-neutral factors (Valor, Qualidade, Momentum, Baixa Vol, Dividendos) blend
+into two thematic books (Retorno Total = Valor+Momentum; Dividendos Defensiva =
+Dividendos+Baixa Vol) plus a master score Φ. **Φ is an evidence-weighted SUM of four
+factor z-scores — Φ = percentil(0.30·L + 0.30·V + 0.20·M + 0.20·Q) × gates — NOT a
+product of the two books, and Dividends are EXCLUDED** (redundant; D lives only in the
+defensive persona). Low-Vol and Value lead because they are the factors that survive on
+our own base (see the backtest verdicts below). The analyst validates and reasons over
+the score; it does not invent factors. Brazil-specific verdicts, each evidence-backed:
+
+- **Valor:** EV/EBIT is the *lead* indicator in Brazil — capital-structure neutral,
+  unlike P/L, which is the most distorted metric here (high, volatile financial
+  expense). The Magic Formula's strong Brazilian record rests on EV/EBIT
+  (SciELO/RAM). P/L (3y-smoothed) and P/VP are secondary.
+- **Qualidade:** add **gross profitability** (gross profits/assets) — comparable
+  predictive power to book-to-market and a better proxy than ROE (Novy-Marx 2013) —
+  alongside ROIC (2y) and net margin.
+- **Momentum:** strong on the B3 in the *literature* (2003–2022, RCF/SciELO:
+  ~9.3%/yr; SMB and HML ≈ 0), measured 6-1 (skip the most recent month, Jegadeesh &
+  Titman 1993). BUT it is **crash-prone in crises** (Mussa et al.; Daniel & Moskowitz
+  2016) AND on our own base it is **marginal** (full-cycle IC t≈2 — below the t>3
+  bar — vs t≈4.3 for Low-Vol). Operational response: momentum is **risk-adjusted by
+  the name's own volatility** (÷σ; Barroso & Santa-Clara 2015 — `config.AFM_MOMENTUM_RISK_ADJ`),
+  which turned the full-cycle Q5−Q1 spread from negative to positive in our backtest;
+  it is also **down-weighted** in Φ (0.20). **Value + Momentum** remains the
+  best-supported diversifying pair for the Retorno Total persona (negatively
+  correlated; Asness, Moskowitz & Pedersen, *JF* 2013).
+- **Crescimento is a FILTER, not a premium.** Past earnings growth has no reliable
+  premium; the premium is on the conservative side (CMA, Fama-French 2015). The
+  growth gate only excludes shrinking firms — it never rewards fast growers.
+- **Dividend yield is largely redundant** — its outperformance is explained by
+  value + quality + defensive exposure; the pure yield factor's contribution is
+  even negative (Income Illusions, *J. of Asset Management* 2023). DY belongs in the
+  income book, **excluded from the master Φ**, never as a standalone alpha thesis.
+- **Baixa Vol (Low-Vol) is the lead factor on our own base** — robust low-volatility
+  anomaly (Frazzini-Pedersen, *Betting Against Beta* 2014) confirmed in our backtest
+  (IC t≈4.6, clears t>3). It carries the highest Φ weight (0.30) alongside Value.
+
+**Empirical validation on our own base (point-in-time, `src/backtest.py`).** We do not
+take factor weights on faith where we can test them: **Low-Vol (t≈4.6) and Quality
+(t≈3.8, PIT via `publish_date`) clear the t>3 multiple-testing bar (Harvey-Liu-Zhu 2016);
+Momentum (t≈2) is promising but below it.** Value and Dividends are NOT cleanly testable
+from Partnr (no valuation ratios / no historical share count for V; TTM-only for D) — V
+stays literature-anchored (EV/EBIT is the best-supported BR value metric) and D is out of
+the master. See `fama_french_fatores_br.md` §3.7/§4.
+
+### Supporting framework: combine value AND quality (never a single factor)
 
 **Value (Fama & French, 1993; 2015).**
 Cheap fundamentals outperform over the long run. Metrics: EV/EBITDA, P/L,
@@ -226,10 +282,9 @@ main recommendation (devil's advocate), (4) revises if the counter-argument
 survives (one revision round), and (5) runs a pre-mortem.
 
 ### Portfolio construction principles
-> **Nota (2026):** a construção de carteira evoluiu para o **Agente Gestor /
-> Carteira ARC** (§5). As diretrizes originais abaixo eram para um
-> contribuinte mensal concentrando o aporte; a carteira recomendada hoje é uma
-> carteira diversificada (~18–30 nomes) no estilo barbell. Mantidas aqui pelo
+> **Nota (2026):** a construção de carteira evoluiu para o **Agente Gestor**
+> (§5) — carteiras de **Factor Investing** (8–12 ações por livro, cap de setor),
+> não mais um aporte mensal concentrado. As diretrizes abaixo ficam pelo
 > princípio de **peso com rationale** e **sem alavancagem/short**, que seguem
 > valendo; os números (4–6 nomes, concentrar em 1 ativo) foram superados pelo §5.
 
@@ -263,39 +318,41 @@ of legal review is sufficient to understand the exposure).
 
 ---
 
-## 5. Gestor — antifragile portfolio construction
+## 5. Gestor — Factor Investing portfolio construction
 
-The Gestor turns the committee's analysis into the Carteira ARC. Evidence
-base (details and operating bands in `gestor_design.md`):
+> **Pivot (2026-06-29):** the unified barbell/sleeve/TAA model (fixed income +
+> gold + crypto in one book, tactical bands per asset class) was **retired**. The
+> Gestor now builds **Factor Investing portfolios**; FIIs, crypto and US/intl
+> assets each became their OWN portfolio owned by a specialist. Source of truth:
+> `arquitetura_carteiras.md`. The evidence below is reframed accordingly.
 
-- **Barbell / antifragility (Taleb, *Antifragile*, 2012).** A large ultra-safe
-  core (fixed income) plus a small convex sleeve (crypto) caps downside while
-  keeping upside open. The safe core is the point, not a concession.
-- **Diversification ~20–30 names.** Fisher & Lorie (1970) — ~32 stocks capture
-  ~95% of diversification; Statman (1987) — 30–40. Beyond that, marginal benefit
-  drops sharply. The Carteira targets ~18–30 names; more is noise.
-- **Tactical allocation within guardrails (TAA).** Strategic policy (the barbell)
-  is the centre; tactical tilts are allowed only within deviation bands. Brinson
-  et al. (1986) — asset allocation explains the bulk of return variance. The
-  Gestor tilts within hard per-sleeve bands enforced in code, never beyond.
-- **Regime-based allocation.** Tilt toward the assets favoured by the current
-  macro regime read from the economist (Bouyé & Teiletche, 2025, *FAJ*,
-  "Regime-Based Strategic Asset Allocation"; Dalio's All-Weather / risk parity as
-  the regime-robust archetype). Direction of the tilt is decided by the regime,
-  not hard-coded.
-- **Crypto sizing ≤ ~5%.** Above ~4% BTC drives >20% of portfolio risk; conserva-
-  tive institutional practice is 1–5%. Hence the 1–5% band, BTC-dominant.
+The Gestor turns the AFM-BR factor model into THREE allocated portfolios:
+🏆 Retorno Total (BR stocks, s_rt = Value+Momentum), 💰 Dividendos Defensiva
+(BR stocks, s_dd = Dividends+Low-Vol) and 🌐 ETFs da B3 (deterministic). Evidence
+base (details in `gestor_design.md`):
+
+- **Factor premia, Brazil-calibrated.** Momentum is the lead factor on the B3
+  and Value+Momentum the diversifying pair (see §2). The two stock books ARE the
+  factor exposures — no asset-class market timing.
+- **Diversification by SECTOR, not name count.** Fisher & Lorie (1970)/Statman
+  (1987) — most diversification comes from spreading low-correlation exposures,
+  not from sheer name count. Hence a hard ≤25% sector cap (`FACTOR_SECTOR_CAP`)
+  in code, with 8–12 names per book; broad ETFs are capped at 30%
+  (`FACTOR_ETF_CAP`) because they dilute the factor premium.
+- **Regime-aware, not regime-timed.** The economist's regime read informs WHICH
+  book the letter favours (e.g. defensive/dividends when real rates are high);
+  the books themselves are strategic, low-turnover factor exposures.
 - **Monthly rebalance, low turnover, long-only.** Long-term horizon; a change is
-  a swap, only on strong structural reason.
+  a swap, only on a strong structural reason. A carteira é **ilustrativa** (um
+  Top-10 de fator que troca para nomes melhores) — performance reportada de forma
+  simples, sem custo/imposto/venda (decisão de produto: não é ordem de compra).
+- **Quantitative risk overlay (`risk.py`).** Each book reports annualised vol,
+  historical/parametric VaR, average/max pairwise correlation and dollar
+  exposure — so the diversification claim is measured, not asserted.
 
-**Refinamentos (feedback de assessor + leitor iniciante):** as rankings são
-**Top-10 em 7 categorias** (ações BR, ações EUA, FIIs, ETF B3, ETF EUA amplo, ETF
-internacional ex-EUA, ETF emergentes) e a carteira tem **10 classes** (incluindo
-ouro como hedge de cauda); enriquecidas por um **pré-passo de pesquisa web**; cada ativo traz
-explicação em linguagem simples (`o_que_e`); a RF de marcação a mercado leva
-**aviso de MtM** e segue **laddering** de prazos (fato: títulos longos IPCA+
-oscilam e podem dar perda se vendidos antes do vencimento); e o relatório separa
-**Brasil × Global** com nota de câmbio/BDR (nem toda ação americana tem BDR).
+A **web-research pre-pass** (`gestor_research`) enriches the BR-stock rationale
+with recent facts; each holding carries a plain-language `o_que_e`, its factor
+letters (V/Q/M/L/D) and a `resumo_leigo`.
 
 ## 5b. Professor, Watchlist e Especialistas — educação, radar e nichos
 
@@ -357,6 +414,11 @@ The system improves week to week without fine-tuning (details in
 - Asness, C.; Frazzini, A. & Pedersen, L. (2019). "Quality Minus Junk." *RAS.*
 - Piotroski, J. (2000). "Value Investing: The Use of Historical Financial Statement Information." *JAR.*
 - Cakici, N.; Fabozzi, F. & Tan, S. (2013). "Size, Value, and Momentum in Emerging Market Stock Returns." *Emerging Markets Review* 16.
+- Asness, C.; Moskowitz, T. & Pedersen, L. (2013). "Value and Momentum Everywhere." *Journal of Finance* 68(3) — the value+momentum diversification pair.
+- "Behavioral Finance: Empirical Evidence Using the Magic Formula in the Brazilian Stock Market." *SciELO/RAM* — EV/EBIT as the lead value metric in Brazil.
+- "Optimal constrained strategies for factor-based investing in the Brazilian market." *RCF/SciELO* — momentum strongest on B3 (2003–2022); SMB/HML ≈ 0.
+- "Factor Sufficiency in Asset Pricing: An Application for the Brazilian Market." *MDPI/IJFS* (2023) — FF5 alone is insufficient for Brazil (omitted factors).
+- "Income Illusions: Challenging the High Yield Stock Narrative." *Journal of Asset Management* (2023) — dividend yield is redundant vs. value/quality/defensive.
 - Bortoluzzo et al. (2021). "Analyzing the quality factor for Brazil." *Brazilian Review of Finance* 19(3):31–52.
 - Mussa, A.; Yang, E.; Trovão, R. & Famá, R. "Revisitando as estratégias de momento: o mercado brasileiro é realmente uma exceção?" *RAUSP* (sample 1997–2014).
 - Hyde, C. (2013). "An Emerging Markets Analysis of the Piotroski F-Score." SSRN 2274516.

@@ -2,7 +2,8 @@
 
 Guia de bolso do sistema. O que cada agente faz, o que recebe, o que produz,
 e como avaliar criticamente cada relatório. Produto atual: **carta semanal de
-research macro de longo prazo + Carteira ARC recomendada**.
+research macro + 7 carteiras de Factor Investing** (ver
+[`arquitetura_carteiras.md`](arquitetura_carteiras.md) — fonte da verdade).
 
 Documentos irmãos: [`methodology.md`](methodology.md) (fundamentos com citações),
 [`gestor_design.md`](gestor_design.md) (a carteira), [`self_improvement_design.md`](self_improvement_design.md)
@@ -45,15 +46,15 @@ de API por agente — ver `performance_api_assessment.md`.
 - `..._dossie.md` — Dossiê do Comitê (visão unificada + opinião separada de cada
   agente + **Anexo Técnico do Arquivista** + metadados: flags do crítico, scores,
   calibração)
-- `..._carteira.md` — Carteira ARC (menu **Top-10** em 7 categorias —
-  ações BR, ações EUA, FIIs, ETF B3, ETF EUA amplo, ETF internacional ex-EUA, ETF
-  emergentes — + carteira com `o_que_e`, aviso de marcação a mercado e separação
-  Brasil×Global)
+- `..._carteira.md` — as **3 carteiras do Gestor**: 🏆 Retorno Total e 💰 Dividendos
+  Defensiva (ações BR, AFM-BR) + 🌐 ETFs da B3 (diversificação geográfica). Cada
+  uma alocada (pesos), com `o_que_e`, `fatores`, setor/geografia e ranking Top-10.
 - `..._whatsapp.txt` — mensagem de WhatsApp (hook + CTA, parte do TL;DR)
 - `..._aprofundamento.md` — **Professor**: aula educativa da semana
 - `..._watchlist.md` — **Watchlist** (3-5 ativos para monitorar, com gatilho)
-- `..._especialista_fii.md` / `_cripto.md` / `_global.md` — **Especialistas**
-  de nicho (opcionais), cada um com sua sub-carteira ilustrativa
+- `..._especialista_fii.md` / `_cripto.md` / `_global.md` — **Especialistas**:
+  cada um com mini-carta temática + carteira(s) de fator (FII / Cripto / Ações US +
+  ETFs intl) + ranking Top-10, do seu motor determinístico
 
 | Comando | O que faz |
 |---|---|
@@ -233,38 +234,41 @@ fidelidade aos três).
 
 ---
 
-## 5. Agente Gestor (Carteira ARC)
+## 5. Agente Gestor (carteiras de fator BR)
 
-**Papel:** transformar a análise do comitê em (A) shortlists **Top-10** em **7
-categorias** (ações BR, ações EUA, FIIs, ETF B3, ETF EUA amplo, ETF internacional
-ex-EUA, ETF emergentes) e (B) a **Carteira ARC** — barbell core-satélite + renda
-fixa, em **10 classes**. Objetivo: maximizar rentabilidade de forma antifrágil e
-de longo prazo. (Detalhes em `gestor_design.md`.)
+**Papel:** transformar o ranking AFM-BR + os motores determinísticos em **três
+carteiras** (ver `gestor_design.md` e `arquitetura_carteiras.md`):
+- 🏆 **Retorno Total** — ações BR, Valor+Momentum (s_rt). 100% ações.
+- 💰 **Dividendos Defensiva** — ações BR, Dividendos+Baixa Vol (s_dd). 100% ações.
+- 🌐 **ETFs da B3** — diversificação geográfica + tilt momentum/baixa-vol
+  (determinística, `etf_screen`).
+Cada uma alocada (pesos somam 1.0), com caps de diversificação em código (setor
+para ações, geografia para ETFs). Não há mais carteira barbell unificada.
 
-**Pré-passo de pesquisa:** antes da decisão, `gestor_research` (Sonnet + web
-search) coleta notas factuais recentes que enriquecem o rationale dos rankings.
+**Pré-passo de pesquisa:** `gestor_research` (Sonnet + web search) coleta notas
+factuais recentes que enriquecem o rationale.
 
-**Explicabilidade:** cada ativo tem `o_que_e` (linguagem simples); RF de marcação
-a mercado vem com aviso; o relatório separa Brasil × Global (nota de câmbio/BDR).
+**Explicabilidade:** cada ativo tem `o_que_e`, `fatores` (V/Q/M/L/D) e `resumo_leigo`.
 
-**Recebe:** os 4 relatórios **destilados por seção** (#3 — só as partes que
-constroem carteira, ~20-25k chars em vez de ~88k) + o **`RECOMMENDATIONS_JSON`**
-do Consolidador (stances por ativo).
+**Recebe:** os 4 relatórios **destilados por seção** + o **`RECOMMENDATIONS_JSON`**
+do Consolidador + o ranking AFM-BR injetado.
 
-**Produz:** shortlists ranqueadas; e a carteira com peso-alvo por ativo, razão, e
-**as 3 opiniões** (economista/fundamentalista/técnico) sintetizadas por ativo.
+**Produz:** as 3 carteiras com peso-alvo, fatores e razão por ativo + o ranking
+Top-10 de ações BR e de ETFs B3. Todas com tracking de performance.
 
 **Modelo:** Opus 4.8 + adaptive thinking + structured outputs (streaming).
 
 **Regras-chave:**
-- **Alocação tática por regime dentro de bandas rígidas** (TAA, 10 classes): RF
-  20–30%, FIIs 8–12%, ações BR 8–12%, ETF B3 3–7%, ETF EUA 20–30%, ETF intl 8–12%,
-  ETF emergentes 3–7%, ações EUA 3–7%, ouro 2–5%, bitcoin 1–3%. As bandas são
-  limite duro (`gestor._apply_sleeve_bands`); o tilt segue o regime do economista.
-- Guard-rails: Tesouro ≤ 40% do sleeve RF; ≤ 25% por setor de ações.
-- Nº de nomes flexível (~18–30). Pesos somam 100%.
+- **Factor Investing, não alocação macro por classe.** As duas carteiras de ações
+  são montadas a partir do ranking AFM-BR (s_rt / s_dd); a de ETFs é determinística
+  (`etf_screen`). Sem renda fixa, ouro, bitcoin ou bandas táticas por classe.
+- Guard-rails em código (`gestor._diversify_and_normalize`): ≤ 25% por **setor**
+  nas ações (`FACTOR_SECTOR_CAP`) e manga de ETFs ≤ 30% do total (`FACTOR_ETF_CAP`),
+  pois ETF amplo dilui o prêmio de fator. ETFs da B3 têm cap por **geografia**.
+- 8–12 nomes por carteira de ações (`FACTOR_PORTFOLIO_MIN/MAX_NAMES`). Pesos somam 1.0.
 - **Rebalance MENSAL** (não semanal), baixo giro, **long-only** (sem venda/short).
-- RF só instrumentos simples (Tesouro/CDB/LCI-LCA); cauda antifrágil = ouro + BTC.
+- Risco quantitativo por carteira (vol, VaR, correlação, exposição a dólar) anexado
+  ao render (`risk.py`).
 
 **Acompanhamento:** `portfolio_perf` registra retorno por ativo + agregado a cada
 run (mesmo sem rebalance). Tabelas: `portfolios`, `portfolio_versions`,
@@ -313,18 +317,19 @@ resistências reais). NÃO é ordem de compra — é radar ("se chegar em X, val
 
 ---
 
-## 9. Especialistas de nicho (add-on, opcionais)
+## 9. Especialistas de nicho (donos de carteiras de fator)
 
-**Papel (#11):** agentes pós-comitê que aprofundam um nicho e produzem uma
-**sub-carteira ilustrativa**. São os produtos add-on do plano (ver
-`produto_reports.md`). Cada um: Sonnet 4.6 + web search focado, recebe a carta do
-comitê + o regime do economista, e pesquisa o próprio nicho.
+**Papel:** agentes pós-comitê, donos do seu universo. Cada um recebe um **motor
+determinístico** (carteira + ranking) como base, faz a **curadoria qualitativa**
+(veta bandeiras vermelhas, aplica tilt de regime) e produz: **mini-carta temática +
+carteira(s) de fator + ranking Top-10**. Sonnet 4.6 + web search. Todas as carteiras
+têm tracking de performance. Ver `arquitetura_carteiras.md`.
 
-| Especialista | Foco | Sub-carteira | Arquivo |
+| Especialista | Carteira(s) | Motor / dados | Arquivo |
 |---|---|---|---|
-| **FII** | P/VP, vacância, DY sustentável, tijolo×papel | Carteira de Dividendos | `_especialista_fii.md` |
-| **Cripto** | BTC/ETH conservador, sem hype, macro | Carteira Cripto (≤5%, BTC-dom.) | `_especialista_cripto.md` |
-| **Global** | EUA/Europa/China/emergentes + câmbio/BDR | Carteira Global | `_especialista_global.md` |
+| **FII** | Carteira de FIIs (segmento + P/VP + FFO + vacância) | `fii_screen` / Fundamentus | `_especialista_fii.md` |
+| **Cripto** | Carteira de Cripto (market-cap + dominância BTC + momentum) | `crypto_screen` / CoinGecko | `_especialista_cripto.md` |
+| **Global** | Ações US (AFM-US: Qualidade+Momentum) + ETFs Internacionais | `us_screen`+`etf_screen` / SEC EDGAR+yfinance | `_especialista_global.md` |
 
 Selecionáveis via `--especialistas fii,cripto,global` (padrão: os três) ou `none`.
 

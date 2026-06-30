@@ -1,5 +1,10 @@
 # Análise comercial e de produto — Reports ARC
 
+> **⚠️ Atualizado 2026-06-29:** o produto técnico agora são **7 carteiras de Factor
+> Investing** (ver [`arquitetura_carteiras.md`](arquitetura_carteiras.md)). As
+> análises comerciais abaixo são da fase "Carteira ARC barbell" — a lógica de
+> público/preço segue útil, mas o produto referenciado mudou.
+
 > Análise feita na posição de **engenheiro de produto + analista comercial** especializado em
 > research financeiro para PF brasileiro. Baseada na leitura dos artefatos reais gerados pelo
 > pipeline (carta, aprofundamento, carteira, whatsapp, rankings) e em pesquisa do mercado de

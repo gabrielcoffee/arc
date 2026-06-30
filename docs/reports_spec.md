@@ -1,9 +1,8 @@
-# Spec dos 4 reports da ARC
+# Spec dos reports da ARC
 
-**Data:** 16/06/2026
-**Objetivo:** definir o formato ideal de cada entregável semanal, com base no seu
-público e propósito. Fundamentado em best practices de research report, newsletter
-de investimento retail, apresentação de carteira e mensageria WhatsApp.
+**Data:** 16/06/2026 · **Atualizado:** 2026-06-29 (Factor Investing)
+**Objetivo:** definir o formato ideal de cada entregável. Arquitetura das carteiras:
+[`arquitetura_carteiras.md`](arquitetura_carteiras.md) (fonte da verdade).
 
 **Status:** implementado. O pipeline gera os entregáveis abaixo:
 
@@ -11,13 +10,17 @@ de investimento retail, apresentação de carteira e mensageria WhatsApp.
 |---|---|---|---|---|
 | 1 | Dossiê do Comitê (full) | você/equipe, auditoria, avançado | `.md` | completo |
 | 2 | Carta Semanal | investidor PF médio | **PDF**/HTML/md | 2–4 págs |
-| 3 | Carteira ARC (Top 10 + carteira) | quem vai alocar | `.md`/PDF | 2–3 págs |
+| 3 | Carteiras do Gestor (Retorno Total · Dividendos · ETFs B3) | quem vai alocar | `.md`/PDF | 2–3 págs |
 | 4 | Mensagem WhatsApp | assinante WhatsApp | texto curto | 3–5 linhas |
 | 5 | Aprofundamento (Professor) | iniciante total | `.md` | 1–2 págs |
 | 6 | Watchlist Semanal | quem acompanha de perto | `.md` | tabela curta |
-| 7 | Especialista FII (+ Carteira de Dividendos) | add-on FII | `.md` | 1–2 págs |
-| 8 | Especialista Cripto (+ Carteira Cripto) | add-on Cripto | `.md` | 1–2 págs |
-| 9 | Especialista Global (+ Carteira Global) | add-on Global | `.md` | 1–2 págs |
+| 7 | Especialista FII (carteira de FIIs + ranking) | add-on Imóveis | `.md` | 1–2 págs |
+| 8 | Especialista Cripto (carteira de cripto + ranking) | add-on Cripto | `.md` | 1–2 págs |
+| 9 | Especialista Global (ações US + ETFs intl + rankings) | add-on Global | `.md` | 1–2 págs |
+
+Cada carteira (3 do Gestor + 4 dos especialistas) é montada por um **motor de
+fatores determinístico** com curadoria do agente, e tem **ranking Top-10** +
+**tracking de performance**.
 
 > **Nota (#12):** o **Anexo Técnico** do Dossiê é gerado pelo agente **Arquivista**
 > (separado do Consolidador, que agora foca só na carta pública). A Watchlist é um

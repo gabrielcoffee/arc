@@ -1,5 +1,10 @@
 # Workflow ARC — Visão Geral
 
+> **⚠️ Atualizado 2026-06-29:** o produto pivotou para **7 carteiras de Factor
+> Investing** (3 do Gestor + 4 dos especialistas). Fonte da verdade:
+> [`arquitetura_carteiras.md`](arquitetura_carteiras.md). Onde este doc citar
+> "Carteira ARC barbell", sleeves ou "Top-10 em 7 categorias", está superado.
+
 **Data:** 19/06/2026
 
 ---
@@ -89,10 +94,13 @@
 **7b. Gestor principal**
 - Input: 4 relatórios **destilados por seção** (só as partes que constroem carteira —
   ~20-25k chars em vez de ~88k) + `RECOMMENDATIONS_JSON` do Consolidador + notas de pesquisa
-- Output:
-  - `shortlists` — Top-10 ranqueado em 7 categorias: acoes_br, acoes_us, fii, etf_br, etf_us, etf_intl, etf_em
-  - `portfolio` — Carteira ARC com 18–30 ativos em 10 sleeves, target_weight, o_que_e, rationale, 3 opiniões por ativo, resumo_leigo
-- Guard-rails em código: bandas rígidas por sleeve, cap de 25% por setor, Tesouro ≤ 40% do sleeve RF
+- Output: TRÊS carteiras de fator alocadas (pesos somam 1.0):
+  - 🏆 **Retorno Total** (ações BR, s_rt = Valor+Momentum) e 💰 **Dividendos
+    Defensiva** (ações BR, s_dd = Dividendos+Baixa Vol) — via Opus + structured outputs
+  - 🌐 **ETFs da B3** — determinística (`etf_screen`), diversificação geográfica + tilt
+  - Cada ativo com target_weight, fatores (V/Q/M/L/D), o_que_e, rationale, resumo_leigo
+- Guard-rails em código: ≤ 25% por setor nas ações (`FACTOR_SECTOR_CAP`), manga de
+  ETFs ≤ 30% (`FACTOR_ETF_CAP`), cap por geografia nos ETFs B3. Sem RF/ouro/bitcoin.
 - Runs intermediários (sem rebalance): apenas snapshot de performance vs. benchmark
 
 ### 8. Professor

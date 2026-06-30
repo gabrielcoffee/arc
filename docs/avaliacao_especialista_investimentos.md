@@ -1,6 +1,11 @@
 # Avaliação do Sistema ARC-Agents
 ### Perspectiva de Especialista em Investimentos — Mercado Brasileiro
 
+> **⚠️ Histórico (avaliação da fase barbell, pré 2026-06-29):** o produto pivotou
+> para 7 carteiras de Factor Investing — ver
+> [`arquitetura_carteiras.md`](arquitetura_carteiras.md). Várias críticas aqui
+> motivaram esse pivot. Mantido como registro.
+
 **Data:** 17 de junho de 2026  
 **Escopo:** análise metodológica, técnica de investimentos e execução do pipeline —
 como visto por um gestor/CIO com experiência no mercado brasileiro, não como review

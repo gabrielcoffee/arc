@@ -1,5 +1,10 @@
 # Comandos — ARC
 
+> **Atualizado 2026-06-29:** arquitetura atual em
+> [`arquitetura_carteiras.md`](arquitetura_carteiras.md). Demos dos motores de
+> fator: `python -m src.backtest`, `python -m src.etf_screen`,
+> `python -m src.fii_screen`, `python -m src.crypto_screen`, `python -m src.us_screen`.
+
 Referência de tudo que dá para rodar: targets do `make`, flags do `pipeline.py` e
 scripts diretos. Os targets do `make` carregam o `.env` automaticamente e ativam a
 `.venv`. `make help` lista todos com uma linha de descrição.
