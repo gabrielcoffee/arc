@@ -35,9 +35,6 @@ export default async function AppPage({
         registrada.
       </p>
       <div className="mt-9 flex flex-wrap gap-4">
-        <ButtonLink href="/exemplo" variant="secondary">
-          Ler uma carta enquanto isso
-        </ButtonLink>
         <ButtonLink href="/planos" variant="ghost">
           Voltar aos planos
         </ButtonLink>

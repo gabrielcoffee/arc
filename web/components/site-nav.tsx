@@ -8,8 +8,8 @@ import { Wordmark } from "@/components/arc-mark";
 import { ButtonLink } from "@/components/ui/button";
 
 const LINKS = [
+  { href: "/", label: "Início" },
   { href: "/como-funciona", label: "Como funciona" },
-  { href: "/exemplo", label: "Carta de exemplo" },
   { href: "/planos", label: "Planos" },
 ];
 
@@ -54,7 +54,9 @@ export function SiteNav() {
               href={l.href}
               className={cn(
                 "text-sm transition-colors hover:text-ink",
-                pathname === l.href ? "text-ink" : "text-ink-2",
+                pathname === l.href
+                  ? "font-bold text-white"
+                  : "text-ink-2",
               )}
             >
               {l.label}
@@ -110,7 +112,12 @@ export function SiteNav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="py-2 text-sm text-ink-2"
+                className={cn(
+                  "py-2 text-sm",
+                  pathname === l.href
+                    ? "font-bold text-white"
+                    : "text-ink-2",
+                )}
               >
                 {l.label}
               </Link>

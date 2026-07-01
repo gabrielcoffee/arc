@@ -1,20 +1,130 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Sparkles, ArrowRight, Crown } from "lucide-react";
 import { cn, brl } from "@/lib/utils";
 import {
   PLANS,
   REPORTS,
-  FLOOR,
   reportById,
   evaluateSelection,
+  type PlanId,
   type ReportId,
 } from "@/lib/plans";
 import { REPORT_ICON } from "@/components/icons";
 import { Button, ButtonLink } from "@/components/ui/button";
 
+/* Cor por plano: inicial branco/cinza · meio amarelo (accent) · último premium (violeta) */
+const PLAN_THEME: Record<
+  PlanId,
+  { icon: string; card: string; btnVariant: "primary" | "secondary"; btnClass: string }
+> = {
+  carta: {
+    icon: "text-ink-2",
+    card: "border-border",
+    btnVariant: "secondary",
+    btnClass: "",
+  },
+  gestora: {
+    icon: "text-accent",
+    card: "border-accent shadow-[0_12px_50px_rgba(234,179,8,0.12)]",
+    btnVariant: "primary",
+    btnClass: "",
+  },
+  gestora_plus: {
+    icon: "text-[#a78bfa]",
+    card: "border-[#8b5cf6]/50 shadow-[0_12px_50px_rgba(139,92,246,0.14)]",
+    btnVariant: "primary",
+    btnClass:
+      "bg-[#8b5cf6] text-white hover:bg-[#7c3aed] shadow-[0_2px_16px_rgba(139,92,246,0.28)]",
+  },
+};
+
 export function PlanPicker() {
+  return (
+    <div className="space-y-16">
+      <FixedPlans />
+      <Customizer />
+    </div>
+  );
+}
+
+/* ── Três planos ─────────────────────────────────────────── */
+function FixedPlans() {
+  return (
+    <div className="mx-auto grid max-w-[1080px] gap-6 sm:grid-cols-3 sm:items-stretch">
+      {PLANS.map((plan) => {
+        const t = PLAN_THEME[plan.id];
+        return (
+          <div
+            key={plan.id}
+            className={cn(
+              "relative flex flex-col rounded-[var(--radius-card)] border bg-surface p-7",
+              t.card,
+            )}
+          >
+            {plan.featured && (
+              <span className="absolute -top-3 left-7 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-mono text-2xs uppercase tracking-[0.12em] text-on-accent">
+                <Sparkles className="h-3 w-3" />
+                Mais escolhido
+              </span>
+            )}
+            {plan.id === "gestora_plus" && (
+              <span className="absolute -top-3 left-7 inline-flex items-center gap-1.5 rounded-full bg-[#8b5cf6] px-3 py-1 font-mono text-2xs uppercase tracking-[0.12em] text-white">
+                <Crown className="h-3 w-3" />
+                Premium
+              </span>
+            )}
+
+            <h3 className="font-display text-2xl text-ink">{plan.name}</h3>
+            <p className="mt-1 text-sm text-ink-2">{plan.tagline}</p>
+
+            <div className="mt-6 flex items-baseline gap-1.5">
+              <span className="font-display text-[3rem] leading-none text-ink">
+                {brl(plan.price)}
+              </span>
+              <span className="text-sm text-ink-2">/mês</span>
+            </div>
+
+            <ul className="mt-7 space-y-3 border-t border-border pt-7">
+              {plan.includes.map((id) => {
+                const r = reportById(id);
+                const Icon = REPORT_ICON[id];
+                return (
+                  <li key={id} className="flex items-start gap-2.5 text-sm">
+                    <Icon
+                      className={cn(
+                        "mt-0.5 h-[1.05rem] w-[1.05rem] shrink-0",
+                        t.icon,
+                      )}
+                    />
+                    <span className="text-ink">{r.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <p className="mt-7 flex-1 text-xs leading-relaxed text-ink-3">
+              {plan.audience}
+            </p>
+
+            <ButtonLink
+              href={`/app?plano=${plan.id}`}
+              variant={t.btnVariant}
+              className={cn("mt-7 w-full", t.btnClass)}
+            >
+              Começar
+              <ArrowRight className="h-4 w-4" />
+            </ButtonLink>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── À-la-carte — monte do zero ──────────────────────────── */
+function Customizer() {
   const [selected, setSelected] = useState<ReportId[]>([
     "carta",
     "aprofundamento",
@@ -25,142 +135,6 @@ export function PlanPicker() {
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
 
-  return (
-    <div className="space-y-16">
-      <FixedPlans />
-      <AddOns selected={selected} onToggle={toggle} />
-      <Customizer selected={selected} toggle={toggle} />
-    </div>
-  );
-}
-
-/* ── Fixed plans — two, centered ─────────────────────────── */
-function FixedPlans() {
-  return (
-    <div className="mx-auto grid max-w-[760px] gap-6 sm:grid-cols-2 sm:items-start">
-      {PLANS.map((plan) => (
-        <div
-          key={plan.id}
-          className={cn(
-            "relative flex flex-col rounded-[var(--radius-card)] border bg-surface p-7",
-            plan.featured
-              ? "border-accent shadow-[0_12px_50px_rgba(234,179,8,0.12)] sm:-mt-3 sm:mb-3"
-              : "border-border",
-          )}
-        >
-          {plan.featured && (
-            <span className="absolute -top-3 left-7 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-mono text-2xs uppercase tracking-[0.12em] text-on-accent">
-              <Sparkles className="h-3 w-3" />
-              Mais escolhido
-            </span>
-          )}
-          <h3 className="font-display text-2xl text-ink">{plan.name}</h3>
-          <p className="mt-1 text-sm text-ink-2">{plan.tagline}</p>
-
-          <div className="mt-6 flex items-baseline gap-1.5">
-            <span className="font-display text-[3rem] leading-none text-ink">
-              {brl(plan.price)}
-            </span>
-            <span className="text-sm text-ink-2">/mês</span>
-          </div>
-
-          <ul className="mt-7 space-y-3 border-t border-border pt-7">
-            {plan.includes.map((id) => {
-              const r = reportById(id);
-              const Icon = REPORT_ICON[id];
-              return (
-                <li key={id} className="flex items-start gap-2.5 text-sm">
-                  <Icon className="mt-0.5 h-[1.05rem] w-[1.05rem] shrink-0 text-accent" />
-                  <span className="text-ink">{r.name}</span>
-                </li>
-              );
-            })}
-          </ul>
-
-          <p className="mt-7 flex-1 text-xs leading-relaxed text-ink-3">
-            {plan.audience}
-          </p>
-
-          <ButtonLink
-            href={`/app?plano=${plan.id}`}
-            variant={plan.featured ? "primary" : "secondary"}
-            className="mt-7 w-full"
-          >
-            Começar
-            <ArrowRight className="h-4 w-4" />
-          </ButtonLink>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── Add-ons, as buttons ─────────────────────────────────── */
-function AddOns({
-  selected,
-  onToggle,
-}: {
-  selected: ReportId[];
-  onToggle: (id: ReportId) => void;
-}) {
-  const esp = REPORTS.filter((r) => r.category === "especialista");
-  return (
-    <div>
-      <p className="text-center font-mono text-2xs uppercase tracking-[0.16em] text-ink-3">
-        Add-ons · disponíveis em qualquer plano
-      </p>
-      <div className="mx-auto mt-5 grid max-w-[760px] gap-3 sm:grid-cols-3">
-        {esp.map((r) => {
-          const Icon = REPORT_ICON[r.id];
-          const on = selected.includes(r.id);
-          return (
-            <button
-              key={r.id}
-              type="button"
-              onClick={() => onToggle(r.id)}
-              aria-pressed={on}
-              className={cn(
-                "group flex items-center gap-3 rounded-[var(--radius-btn)] border p-4 text-left transition-all",
-                on
-                  ? "border-accent bg-accent-wash"
-                  : "border-border bg-surface hover:border-ink-3",
-              )}
-            >
-              <span
-                className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
-                  on
-                    ? "border-transparent bg-accent text-on-accent"
-                    : "border-border text-accent",
-                )}
-              >
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-sm text-ink">{r.name}</span>
-                <span className="block truncate font-mono text-2xs text-ink-3">
-                  {on ? "selecionado" : "adicionar"}
-                </span>
-              </span>
-              <span className="shrink-0 font-mono text-sm text-accent">
-                +{brl(r.price)}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/* ── Customizer ──────────────────────────────────────────── */
-function Customizer({
-  selected,
-  toggle,
-}: {
-  selected: ReportId[];
-  toggle: (id: ReportId) => void;
-}) {
   const result = useMemo(() => evaluateSelection(selected), [selected]);
 
   const base = REPORTS.filter((r) => r.category === "base");
@@ -173,19 +147,19 @@ function Customizer({
     >
       <div className="border-b border-border p-7 sm:p-9">
         <p className="font-mono text-2xs uppercase tracking-[0.16em] text-accent">
-          Monte sua Gestora
+          Monte do zero
         </p>
         <h3 className="mt-3 font-display text-[clamp(1.75rem,3vw,2.25rem)] leading-tight text-ink">
-          Prefere montar do zero?
+          Prefere escolher cada report?
         </h3>
         <p className="mt-2 max-w-lg text-sm leading-relaxed text-ink-2">
-          Escolha cada peça. O total atualiza na hora. Quando sua seleção
+          Selecione peça por peça. O total atualiza na hora. Quando sua seleção
           equivale a um plano, a gente avisa.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-[1fr_360px]">
-        {/* selection */}
+        {/* seleção */}
         <div className="space-y-8 p-7 sm:p-9">
           <Group title="Reports base">
             {base.map((r) => (
@@ -197,7 +171,7 @@ function Customizer({
               />
             ))}
           </Group>
-          <Group title="Especialistas (add-on)">
+          <Group title="Especialistas">
             {esp.map((r) => (
               <ReportRow
                 key={r.id}
@@ -209,7 +183,7 @@ function Customizer({
           </Group>
         </div>
 
-        {/* summary — sticky on desktop */}
+        {/* resumo — sticky no desktop */}
         <div className="border-t border-border bg-subtle/40 p-7 sm:p-9 lg:border-l lg:border-t-0">
           <div className="lg:sticky lg:top-24">
             <p className="font-mono text-2xs uppercase tracking-[0.14em] text-ink-2">
@@ -221,13 +195,6 @@ function Customizer({
               </span>
               <span className="text-sm text-ink-2">/mês</span>
             </div>
-
-            {result.flooredApplied && (
-              <p className="mt-3 rounded-md bg-accent-wash px-3 py-2 text-xs leading-relaxed text-ink-2">
-                Piso mínimo de {brl(FLOOR)} — o custo de produzir os reports é
-                praticamente o mesmo para todos.
-              </p>
-            )}
 
             {result.suggestion && (
               <div className="mt-4 rounded-[var(--radius-btn)] border border-accent/40 bg-accent-wash p-4">

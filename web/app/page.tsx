@@ -29,9 +29,6 @@ export default function Home() {
                   Ver planos
                   <ArrowRight className="h-4 w-4" />
                 </ButtonLink>
-                <ButtonLink href="/exemplo" variant="ghost">
-                  Ler relatórios de exemplo →
-                </ButtonLink>
               </div>
             </div>
 
@@ -51,7 +48,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1200px] px-6 py-24">
           <Reveal>
             <h2 className="max-w-2xl font-display text-[clamp(2rem,4vw,2.75rem)] font-medium leading-tight tracking-[-0.015em] text-ink">
-              Entregáveis reais, não promessas.
+              O que seus agentes te entregam
             </h2>
           </Reveal>
           <Reveal delay={120} className="mt-12">
@@ -64,9 +61,9 @@ export default function Home() {
       <section className="mx-auto max-w-[1200px] px-6 py-28">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-tight tracking-[-0.015em] text-ink">
-            Comece com a Carta.
+            Entenda melhor o mercado.
             <br />
-            Expanda quando quiser.
+            Aprimore sua carteira.
           </h2>
           <p className="mt-5 text-lg text-ink-2">
             Cancele a qualquer momento. Sem fidelidade.
@@ -75,9 +72,6 @@ export default function Home() {
             <ButtonLink href="/planos">
               Ver planos
               <ArrowRight className="h-4 w-4" />
-            </ButtonLink>
-            <ButtonLink href="/exemplo" variant="secondary">
-              Ler relatórios de exemplo
             </ButtonLink>
           </div>
         </Reveal>

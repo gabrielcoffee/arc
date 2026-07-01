@@ -160,9 +160,6 @@ export default function ComoFuncionaPage() {
       </div>
 
       <div className="mt-12 flex flex-wrap items-center gap-4">
-        <ButtonLink href="/exemplo" variant="secondary">
-          Ler uma carta de exemplo
-        </ButtonLink>
         <ButtonLink href="/planos">
           Ver planos
           <ArrowRight className="h-4 w-4" />

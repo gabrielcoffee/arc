@@ -57,7 +57,7 @@ export const REPORTS: Report[] = [
   {
     id: "esp_fii",
     name: "Especialista FII",
-    price: 29,
+    price: 19,
     cadence: "Mensal",
     category: "especialista",
     blurb: "P/VP, vacância, DY + Carteira de Dividendos.",
@@ -65,7 +65,7 @@ export const REPORTS: Report[] = [
   {
     id: "esp_cripto",
     name: "Especialista Cripto",
-    price: 29,
+    price: 19,
     cadence: "Mensal",
     category: "especialista",
     blurb: "BTC, ETH e macro cripto — conservador, sem hype.",
@@ -73,17 +73,20 @@ export const REPORTS: Report[] = [
   {
     id: "esp_global",
     name: "Especialista Global",
-    price: 29,
+    price: 19,
     cadence: "Mensal",
     category: "especialista",
     blurb: "Europa, China, emergentes + câmbio para o investidor BR.",
   },
 ];
 
-export const FLOOR = 37; // "Monte sua Gestora" minimum
+/** Ids dos especialistas (usados no à-la-carte). */
+export const ESPECIALISTAS: ReportId[] = ["esp_fii", "esp_cripto", "esp_global"];
+
+export type PlanId = "carta" | "gestora" | "gestora_plus";
 
 export interface Plan {
-  id: "carta" | "gestora";
+  id: PlanId;
   name: string;
   price: number;
   tagline: string;
@@ -95,22 +98,39 @@ export interface Plan {
 export const PLANS: Plan[] = [
   {
     id: "carta",
-    name: "Plano Carta",
-    price: 37,
+    name: "Carta",
+    price: 19,
     tagline: "Entenda o mercado toda semana.",
     audience:
-      "Para quem quer entender o cenário antes de alocar com base na recomendação.",
+      "Para quem quer acompanhar o cenário antes de decidir onde alocar.",
     includes: ["carta", "aprofundamento"],
   },
   {
     id: "gestora",
-    name: "Plano Gestora",
-    price: 67,
-    tagline: "Carta + a Carteira ARC, todo mês.",
+    name: "Gestora",
+    price: 59,
+    tagline: "O cenário + a Carteira ARC e os Rankings.",
     audience:
-      "Para quem quer alocar com base na recomendação e acompanhar de forma estruturada.",
+      "Para quem quer alocar seguindo a recomendação, de forma estruturada.",
     includes: ["carta", "aprofundamento", "carteira", "rankings"],
     featured: true,
+  },
+  {
+    id: "gestora_plus",
+    name: "Gestora+",
+    price: 99,
+    tagline: "Tudo, mais os três especialistas.",
+    audience:
+      "Para quem investe também em FIIs, cripto e mercados globais.",
+    includes: [
+      "carta",
+      "aprofundamento",
+      "carteira",
+      "rankings",
+      "esp_fii",
+      "esp_cripto",
+      "esp_global",
+    ],
   },
 ];
 
@@ -125,44 +145,35 @@ export function listSum(ids: ReportId[]): number {
 }
 
 export interface CustomizerResult {
-  rawTotal: number; // sum of à-la-carte prices
-  total: number; // after applying the floor
-  flooredApplied: boolean;
-  /** A fixed plan whose contents are fully covered by the selection, if cheaper. */
+  total: number; // soma à-la-carte da seleção
+  /** Plano cuja lista está inteiramente contida na seleção e sai mais barato. */
   suggestion?: {
     plan: Plan;
-    extras: ReportId[]; // selected items beyond the plan
-    bundlePrice: number; // plan price + extras
-    savings: number; // raw - bundlePrice
+    extras: ReportId[]; // itens selecionados além do plano
+    bundlePrice: number; // preço do plano + extras
+    savings: number; // à-la-carte − bundle
   };
 }
 
-/** Mirrors the customizer logic described in produto_reports.md §3. */
+/** À-la-carte: soma a seleção e sugere o plano que a cobre mais barato. */
 export function evaluateSelection(selected: ReportId[]): CustomizerResult {
-  const rawTotal = listSum(selected);
-  const total = Math.max(rawTotal, FLOOR);
+  const total = listSum(selected);
   const set = new Set(selected);
 
-  // Find the richest plan fully contained in the selection.
-  const covered = PLANS.filter((p) => p.includes.every((id) => set.has(id))).sort(
-    (a, b) => b.price - a.price,
-  );
+  const covered = PLANS.filter((p) =>
+    p.includes.every((id) => set.has(id)),
+  ).sort((a, b) => b.price - a.price);
 
   let suggestion: CustomizerResult["suggestion"];
   const plan = covered[0];
   if (plan) {
     const extras = selected.filter((id) => !plan.includes.includes(id));
     const bundlePrice = plan.price + listSum(extras);
-    const savings = rawTotal - bundlePrice;
+    const savings = total - bundlePrice;
     if (savings > 0) suggestion = { plan, extras, bundlePrice, savings };
   }
 
-  return {
-    rawTotal,
-    total,
-    flooredApplied: rawTotal < FLOOR && selected.length > 0,
-    suggestion,
-  };
+  return { total, suggestion };
 }
 
 export const DISCLAIMER =

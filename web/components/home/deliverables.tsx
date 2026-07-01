@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { StanceBadge } from "@/components/ui/stance-badge";
 import { EconIndicator } from "@/components/econ-indicator";
+import { REPORT_ICON } from "@/components/icons";
 
 type TabId = "carta" | "carteira" | "rankings" | "aprofundamento";
 
@@ -20,20 +21,29 @@ export function Deliverables() {
   return (
     <div>
       <div className="mb-6 flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={cn(
-              "rounded-full border px-4 py-2 text-xs transition-all",
-              tab === t.id
-                ? "border-accent bg-accent-wash text-ink"
-                : "border-border text-ink-2 hover:border-ink-3",
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+        {TABS.map((t) => {
+          const Icon = REPORT_ICON[t.id];
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-[var(--radius-btn)] border px-4 py-2 text-xs transition-all",
+                tab === t.id
+                  ? "border-accent bg-accent-wash text-ink"
+                  : "border-border text-ink-2 hover:border-ink-3",
+              )}
+            >
+              <Icon
+                className={cn(
+                  "h-4 w-4 shrink-0",
+                  tab === t.id ? "text-accent" : "text-ink-3",
+                )}
+              />
+              {t.label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
